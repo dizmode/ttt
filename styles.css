@@ -732,3 +732,23 @@ body {
         width: 100%;
     }
 }
+
+/* Optional: use local font file if you add it at /fonts/SignPainter.ttf */
+@font-face {
+  font-family: "SignPainter";
+  src: url("fonts/SignPainter.ttf") format("truetype");
+  font-display: swap;
+}
+
+h1, h2, h3, h4, .logo {
+  font-family: "SignPainter", "SignPainter-HouseScript", "Brush Script MT", cursive;
+}
+
+/* Revert hero content fonts back to default */
+.hero-content h1,
+.hero-content h2,
+.hero-content h3,
+.hero-content p,
+.hero-sub {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
