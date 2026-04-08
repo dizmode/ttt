@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export default function Home() {
   return (
     <div>
@@ -5,7 +7,16 @@ export default function Home() {
       <header className="header">
         <div className="container">
           <div className="header-content">
-            <h1 className="logo">🎨 T-Shirts That Talk</h1>
+            <h1 className="logo">
+              <Image
+                src="/images/images.jpeg"
+                alt="T-Shirts That Talk"
+                className="logo-image"
+                width={246}
+                height={166}
+                priority
+              />
+            </h1>
             <nav className="nav" aria-label="Main navigation">
               <a href="/" className="nav-link active">Home</a>
               <a href="/about" className="nav-link">About</a>
@@ -20,7 +31,7 @@ export default function Home() {
       <section
         className="hero min-h-[420px] flex items-center justify-center"
         style={{
-          backgroundImage: "url('/images/background.png')",
+          backgroundImage: "url('/images/293070750_518357363413511_1563771426478272162_n.png')",
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center center',
           backgroundSize: 'cover',
