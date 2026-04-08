@@ -73,7 +73,7 @@ export default function Home() {
             </div>
             <div className="deal-card">
               <div className="deal-day">Saturday</div>
-              <div className="deal-name">Smokin' Saturdays</div>
+              <div className="deal-name">Smokin&apos; Saturdays</div>
               <div className="deal-offer">20% off 420-Related items</div>
             </div>
             <div className="deal-card">
@@ -198,7 +198,7 @@ export default function Home() {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; 2025 T-Shirts That Talk — #2 - 3125 Van Horne Rd., Qualicum Beach, BC · Owner: Jambo · <a href="tel:2509518869" style={{ color: '#999' }}>(250) 951-8869</a></p>
+            <p>&copy; 2025 T-Shirts That Talk — #2 - 3125 Van Horne Rd., Qualicum Beach, BC · Owner: Jambo&nbsp;· <a href="tel:2509518869" style={{ color: '#999' }}>(250) 951-8869</a></p>
           </div>
         </div>
       </footer>
