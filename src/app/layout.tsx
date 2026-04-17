@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter, Kaushan_Script } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -43,6 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${signPainter.variable} font-sans antialiased`}>{children}</body>
+      <Analytics />
     </html>
   )
 }
