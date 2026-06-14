@@ -2,19 +2,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const navItems = [
-  { href: '/2', label: 'Home' },
+  { href: '/welcome', label: 'Home' },
   { href: '/shoponline', label: 'Shop' },
-  { href: '/2/cart', label: 'Cart' },
-  { href: '/2/about', label: 'About' },
-  { href: '/2/gallery', label: 'Gallery' },
-  { href: '/2/contact', label: 'Contact' },
+  { href: '/welcome/cart', label: 'Cart' },
+  { href: '/welcome/about', label: 'About' },
+  { href: '/welcome/gallery', label: 'Gallery' },
+  { href: '/welcome/contact', label: 'Contact' },
 ];
 
 export function SiteNav() {
   return (
     <header className="sticky top-0 z-50 border-b border-black/10 bg-gradient-to-r from-purple-500/20 via-cyan-400/20 to-purple-500/20 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        <Link href="/2" className="flex items-center gap-3">
+        <Link href="/welcome" className="flex items-center gap-3">
           <Image
             src="/images/images.jpeg"
             alt="T-Shirts That Talk logo"
