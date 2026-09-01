@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 import { products } from '@/data/products';
 import { useCartStore } from '@/store/cartStore';
@@ -18,15 +19,25 @@ const defaultShipping: ShippingInfo = {
   notes: '',
 };
 
-export default function CartPage() {
+function CartContent() {
+  const searchParams = useSearchParams();
   const items = useCartStore((state) => state.items);
   const setQuantity = useCartStore((state) => state.setQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
 
   const [shipping, setShipping] = useState<ShippingInfo>(defaultShipping);
+  const [paymentMethod, setPaymentMethod] = useState<'paypal' | 'stripe'>('paypal');
   const [acceptedPolicies, setAcceptedPolicies] = useState(false);
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (searchParams.get('canceled')) {
+      setError('Checkout was canceled. Your cart items are still saved.');
+    } else if (searchParams.get('error')) {
+      setError('An error occurred during PayPal processing. Please try again.');
+    }
+  }, [searchParams]);
 
   const cartItems = items
     .map((item) => ({
@@ -72,7 +83,8 @@ export default function CartPage() {
     };
 
     try {
-      const response = await fetch('/api/checkout', {
+      const endpoint = paymentMethod === 'paypal' ? '/api/paypal/checkout' : '/api/checkout';
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderPayload),
@@ -250,6 +262,49 @@ export default function CartPage() {
                   />
                 </label>
 
+                <div className="space-y-3">
+                  <span className="text-sm font-semibold text-zinc-700">Select payment method</span>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <label
+                      className={`flex cursor-pointer items-center gap-3 rounded-2xl border p-4 transition ${
+                        paymentMethod === 'paypal' ? 'border-yellow-500 bg-yellow-50/50' : 'border-black/10 bg-[#f7f7f5]'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        value="paypal"
+                        checked={paymentMethod === 'paypal'}
+                        onChange={() => setPaymentMethod('paypal')}
+                        className="h-4 w-4 accent-yellow-500"
+                      />
+                      <div>
+                        <p className="text-sm font-bold text-black">PayPal</p>
+                        <p className="text-xs text-zinc-600">Pay with PayPal or card</p>
+                      </div>
+                    </label>
+
+                    <label
+                      className={`flex cursor-pointer items-center gap-3 rounded-2xl border p-4 transition ${
+                        paymentMethod === 'stripe' ? 'border-black bg-zinc-100' : 'border-black/10 bg-[#f7f7f5]'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        value="stripe"
+                        checked={paymentMethod === 'stripe'}
+                        onChange={() => setPaymentMethod('stripe')}
+                        className="h-4 w-4 accent-black"
+                      />
+                      <div>
+                        <p className="text-sm font-bold text-black">Credit / Debit Card</p>
+                        <p className="text-xs text-zinc-600">Secure checkout via Stripe</p>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
                 <label className="flex items-start gap-3 rounded-2xl border border-black/10 bg-[#f7f7f5] px-4 py-3">
                   <input
                     type="checkbox"
@@ -283,9 +338,17 @@ export default function CartPage() {
                 <button
                   type="submit"
                   disabled={status === 'submitting' || cartItems.length === 0}
-                  className="inline-flex w-full items-center justify-center rounded-3xl bg-black px-6 py-4 text-sm font-semibold text-white transition hover:bg-zinc-900 disabled:cursor-not-allowed disabled:bg-zinc-300"
+                  className={`inline-flex w-full items-center justify-center rounded-3xl px-6 py-4 text-sm font-semibold transition disabled:cursor-not-allowed disabled:bg-zinc-300 ${
+                    paymentMethod === 'paypal'
+                      ? 'bg-[#FFC439] text-black hover:bg-[#F2BA31]'
+                      : 'bg-black text-white hover:bg-zinc-900'
+                  }`}
                 >
-                  {status === 'submitting' ? 'Redirecting to secure payment…' : 'Continue to secure payment'}
+                  {status === 'submitting'
+                    ? 'Redirecting to secure payment…'
+                    : paymentMethod === 'paypal'
+                      ? 'Pay with PayPal'
+                      : 'Continue to Credit Card Payment'}
                 </button>
               </form>
             </section>
@@ -322,5 +385,19 @@ export default function CartPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function CartPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-[#f7f7f5] text-zinc-600">
+          Loading cart...
+        </div>
+      }
+    >
+      <CartContent />
+    </Suspense>
   );
 }

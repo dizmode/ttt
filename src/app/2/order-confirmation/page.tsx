@@ -12,14 +12,20 @@ type OrderConfirmationPageProps = {
   searchParams: {
     orderId?: string;
     session_id?: string;
+    paypal_order_id?: string;
+    status?: string;
   };
 };
 
 export default async function OrderConfirmationPage({ searchParams }: OrderConfirmationPageProps) {
   let paymentStatus: 'paid' | 'pending' | 'unknown' = 'unknown';
   const sessionId = searchParams.session_id;
+  const paypalOrderId = searchParams.paypal_order_id;
+  const rawStatus = searchParams.status;
 
-  if (sessionId) {
+  if (paypalOrderId || rawStatus === 'paid') {
+    paymentStatus = 'paid';
+  } else if (sessionId) {
     try {
       const stripe = getStripeServerClient();
       const session = await stripe.checkout.sessions.retrieve(sessionId);
