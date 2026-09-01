@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 const reviews = [
   {
     name: 'Local Customer',
@@ -58,22 +56,22 @@ export function ReviewTeaser() {
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link
-            href="https://www.google.com/search?q=T-Shirts+That+Talk+Qualicum+Beach+reviews"
+          <a
+            href="https://www.google.com/maps?q=T-Shirts+That+Talk,+3125+Van+Horne+Rd,+Qualicum+Beach,+BC"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full bg-black px-5 py-2 text-sm font-semibold text-white transition hover:bg-zinc-800"
           >
             Read Reviews on Google
-          </Link>
-          <Link
-            href="https://www.google.com/search?q=T-Shirts+That+Talk+Qualicum+Beach+write+a+review"
+          </a>
+          <a
+            href="https://www.google.com/maps?q=T-Shirts+That+Talk,+3125+Van+Horne+Rd,+Qualicum+Beach,+BC"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full border border-black/30 bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-zinc-100"
           >
             Leave a Review
-          </Link>
+          </a>
         </div>
       </div>
     </section>

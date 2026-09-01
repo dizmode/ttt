@@ -2,13 +2,20 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 
 import { products } from '@/data/products';
 import { useCartStore } from '@/store/cartStore';
 
+const categories = ['All', ...Array.from(new Set(products.map((product) => product.category)))];
+
 export default function ProductsPage() {
   const addItem = useCartStore((state) => state.addItem);
   const getQuantity = useCartStore((state) => state.getQuantity);
+  const [activeCategory, setActiveCategory] = useState('All');
+  const displayedProducts = activeCategory === 'All'
+    ? products
+    : products.filter((product) => product.category === activeCategory);
 
   return (
     <main className="min-h-screen bg-[#f7f7f5]">
@@ -30,8 +37,30 @@ export default function ProductsPage() {
           </Link>
         </div>
 
+        <div className="mb-8 flex flex-wrap gap-2" aria-label="Filter products by category">
+          {categories.map((category) => {
+            const isActive = category === activeCategory;
+
+            return (
+              <button
+                key={category}
+                type="button"
+                aria-pressed={isActive}
+                onClick={() => setActiveCategory(category)}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  isActive
+                    ? 'bg-black text-white'
+                    : 'border border-black/10 bg-white text-black hover:bg-zinc-100'
+                }`}
+              >
+                {category}
+              </button>
+            );
+          })}
+        </div>
+
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => {
+          {displayedProducts.map((product) => {
             const quantityInCart = getQuantity(product.id);
             const available = product.stock - quantityInCart;
 

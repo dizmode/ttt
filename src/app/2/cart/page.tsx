@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 import { products } from '@/data/products';
@@ -20,13 +19,12 @@ const defaultShipping: ShippingInfo = {
 };
 
 export default function CartPage() {
-  const router = useRouter();
   const items = useCartStore((state) => state.items);
   const setQuantity = useCartStore((state) => state.setQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
-  const clearCart = useCartStore((state) => state.clearCart);
 
   const [shipping, setShipping] = useState<ShippingInfo>(defaultShipping);
+  const [acceptedPolicies, setAcceptedPolicies] = useState(false);
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [error, setError] = useState<string | null>(null);
 
@@ -62,13 +60,19 @@ export default function CartPage() {
       return;
     }
 
+    if (!acceptedPolicies) {
+      setError('Please accept the Terms, Refund Policy, and Privacy Policy before placing your order.');
+      setStatus('error');
+      return;
+    }
+
     const orderPayload = {
       items: cartItems.map((item) => ({ productId: item.product!.id, quantity: item.quantity })),
       shipping,
     };
 
     try {
-      const response = await fetch('/api/orders', {
+      const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderPayload),
@@ -80,8 +84,11 @@ export default function CartPage() {
       }
 
       const data = await response.json();
-      clearCart();
-      router.push(`/2/order-confirmation?orderId=${encodeURIComponent(data.orderId)}`);
+      if (!data?.url) {
+        throw new Error('Unable to start secure payment.');
+      }
+
+      window.location.assign(data.url);
     } catch (submissionError) {
       setError(String(submissionError));
       setStatus('error');
@@ -100,7 +107,7 @@ export default function CartPage() {
             </p>
           </div>
           <Link
-            href="/shoponline"
+            href="/2/products"
             className="inline-flex items-center justify-center rounded-full border border-black/10 bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-zinc-100"
           >
             Continue shopping
@@ -243,6 +250,34 @@ export default function CartPage() {
                   />
                 </label>
 
+                <label className="flex items-start gap-3 rounded-2xl border border-black/10 bg-[#f7f7f5] px-4 py-3">
+                  <input
+                    type="checkbox"
+                    checked={acceptedPolicies}
+                    onChange={(event) => setAcceptedPolicies(event.target.checked)}
+                    className="mt-1 h-4 w-4"
+                  />
+                  <span className="text-sm text-zinc-700">
+                    I agree to the{' '}
+                    <Link href="/terms" className="font-semibold text-black underline">
+                      Terms and Conditions
+                    </Link>
+                    ,{' '}
+                    <Link href="/refund" className="font-semibold text-black underline">
+                      Refund Policy
+                    </Link>
+                    , and{' '}
+                    <Link href="/privacy" className="font-semibold text-black underline">
+                      Privacy Policy
+                    </Link>
+                    .
+                  </span>
+                </label>
+
+                <p className="text-xs leading-5 text-zinc-600">
+                  Your shipping and contact information is used only for order fulfillment, customer support, and legal record-keeping.
+                </p>
+
                 {error ? <p className="text-sm font-semibold text-red-600">{error}</p> : null}
 
                 <button
@@ -250,7 +285,7 @@ export default function CartPage() {
                   disabled={status === 'submitting' || cartItems.length === 0}
                   className="inline-flex w-full items-center justify-center rounded-3xl bg-black px-6 py-4 text-sm font-semibold text-white transition hover:bg-zinc-900 disabled:cursor-not-allowed disabled:bg-zinc-300"
                 >
-                  {status === 'submitting' ? 'Placing order…' : 'Place order'}
+                  {status === 'submitting' ? 'Redirecting to secure payment…' : 'Continue to secure payment'}
                 </button>
               </form>
             </section>

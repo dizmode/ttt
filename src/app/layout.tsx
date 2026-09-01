@@ -1,7 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter, Kaushan_Script } from 'next/font/google';
-import { Analytics } from '@vercel/analytics/react';
+import { ComplianceConsent } from '@/components/compliance-consent';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -43,8 +43,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${signPainter.variable} font-sans antialiased`}>{children}</body>
-      <Analytics />
+      <body className={`${inter.variable} ${signPainter.variable} font-sans antialiased`}>
+        {children}
+        <ComplianceConsent />
+      </body>
     </html>
   )
 }

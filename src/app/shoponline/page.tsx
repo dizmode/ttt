@@ -26,13 +26,13 @@ export default function ShopOnlinePage() {
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
-                href="/2"
+                href="/welcome"
                 className="inline-flex items-center justify-center rounded-full bg-black px-8 py-4 text-sm font-semibold text-white transition hover:bg-zinc-900"
               >
                 Back to home
               </Link>
               <Link
-                href="/2/contact"
+                href="/contact"
                 className="inline-flex items-center justify-center rounded-full border border-black/10 bg-white px-8 py-4 text-sm font-semibold text-black transition hover:bg-zinc-100"
               >
                 Contact us

@@ -1,13 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+
 const navItems = [
-  { href: '/welcome', label: 'Home' },
-  { href: '/shoponline', label: 'Shop' },
-  { href: '/welcome/cart', label: 'Cart' },
-  { href: '/welcome/about', label: 'About' },
-  { href: '/welcome/gallery', label: 'Gallery' },
-  { href: '/welcome/contact', label: 'Contact' },
+  { label: 'Home', href: '/welcome' },
+  { label: 'Shop', href: '/2/products' },
+  { label: 'Cart', href: '/2/cart' },
+  { label: 'About', href: '/about' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export function SiteNav() {
@@ -29,13 +30,13 @@ export function SiteNav() {
         </Link>
 
         <nav className="flex items-center gap-2 sm:gap-3" aria-label="Main navigation">
-          {navItems.map((item) => (
+          {navItems.map(({ label, href }) => (
             <Link
-              key={item.href}
-              href={item.href}
+              key={label}
+              href={href}
               className="rounded-full px-3 py-2 text-sm font-semibold text-black transition hover:bg-black hover:text-white"
             >
-              {item.label}
+              {label}
             </Link>
           ))}
         </nav>

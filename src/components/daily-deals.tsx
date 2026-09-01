@@ -5,10 +5,10 @@ import { motion } from 'framer-motion';
 const deals = [
   { day: 'Monday', name: 'Hoodie Monday', offer: '20% off all Hoodies', emoji: '🧥', tone: 'from-fuchsia-500 to-purple-500' },
   { day: 'Tuesday', name: 'Tie Dye Tuesdays', offer: '20% off Tie Dye Tees & Tanks', emoji: '🌈', tone: 'from-cyan-400 to-blue-500' },
-  { day: 'Wednesday', name: 'HumpDay Wednesdays', offer: '20% off X-Rated gear', emoji: '🔥', tone: 'from-amber-400 to-orange-500' },
-  { day: 'Thursday', name: 'Thirsty Thursdays', offer: '20% off Beer gear', emoji: '🍺', tone: 'from-yellow-300 to-amber-500' },
+  { day: 'Wednesday', name: 'Graphic Wednesdays', offer: '20% off Graphic Tees', emoji: '🔥', tone: 'from-amber-400 to-orange-500' },
+  { day: 'Thursday', name: 'Color Pop Thursday', offer: '20% off Bright Print styles', emoji: '🎨', tone: 'from-yellow-300 to-amber-500' },
   { day: 'Friday', name: '3 For Fridays', offer: 'Buy 3, Get One Free!', emoji: '🎉', tone: 'from-rose-500 to-pink-500' },
-  { day: 'Saturday', name: "Smokin' Saturdays", offer: '20% off 420-Related items', emoji: '💨', tone: 'from-emerald-500 to-lime-500' },
+  { day: 'Saturday', name: 'Weekend Bundle', offer: '20% off matching sets', emoji: '🛍️', tone: 'from-emerald-500 to-lime-500' },
   { day: 'Sunday', name: 'Sunday Brunch', offer: '15% off — Opening til 2pm', emoji: '🥞', tone: 'from-sky-400 to-indigo-500' },
   { day: 'Every Day', name: '🍀 Lucky Gear', offer: 'Always in stock!', emoji: '🍀', tone: 'from-teal-400 to-cyan-500' },
 ];

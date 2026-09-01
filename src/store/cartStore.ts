@@ -47,7 +47,7 @@ export const useCartStore = create<CartState>((set, get) => ({
       ),
     }));
   },
-  clearCart: () => ({ items: [] }),
+  clearCart: () => set({ items: [] }),
   getQuantity: (productId) => {
     const item = get().items.find((entry) => entry.productId === productId);
     return item?.quantity ?? 0;

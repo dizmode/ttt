@@ -1,6 +1,5 @@
- 'use client';
+'use client';
 
-import { useEffect } from 'react';
 import { ContactForm } from '@/components/contact-form';
 import { DailyDeals } from '@/components/daily-deals';
 import { Hero } from '@/components/hero';
@@ -10,17 +9,6 @@ import { SiteFooter } from '@/components/site-footer';
 import { SiteNav } from '@/components/site-nav';
 
 export default function WelcomePage() {
-  useEffect(() => {
-    // Attempt to open the external welcome pages in new tabs.
-    // Note: browsers may block automatic popups.
-    try {
-      window.open('https://www.dyxmyx.com/welcome', '_blank', 'noopener,noreferrer');
-      window.open('https://fuxey.shop', '_blank', 'noopener,noreferrer');
-    } catch (e) {
-      // ignore
-    }
-  }, []);
-
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'ClothingStore',
@@ -46,3 +34,4 @@ export default function WelcomePage() {
     </main>
   );
 }
+

@@ -26,6 +26,20 @@ export function SiteFooter() {
         <div>
           <h4 className="mb-1 text-xs font-bold uppercase tracking-widest text-zinc-400">Made Local</h4>
           <p className="text-xs text-zinc-300">Made with love in Qualicum Beach, BC.</p>
+          <div className="mt-2 space-y-1">
+            <Link href="/privacy" className="block text-xs text-cyan-300 transition hover:text-cyan-200">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="block text-xs text-cyan-300 transition hover:text-cyan-200">
+              Terms and Conditions
+            </Link>
+            <Link href="/refund" className="block text-xs text-cyan-300 transition hover:text-cyan-200">
+              Refund Policy
+            </Link>
+            <Link href="/shipping" className="block text-xs text-cyan-300 transition hover:text-cyan-200">
+              Shipping Policy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
