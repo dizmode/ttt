@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPayPalAccessToken, getPayPalBaseUrl } from '@/lib/paypal';
+import { sendOrderNotification } from '@/lib/notifications';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -31,6 +32,42 @@ export async function GET(request: NextRequest) {
     const captureData = await captureResponse.json();
 
     if (captureData.status === 'COMPLETED') {
+      const purchaseUnit = captureData.purchase_units?.[0];
+      const payer = captureData.payer;
+      const customerName = payer?.name?.given_name
+        ? `${payer.name.given_name} ${payer.name.surname || ''}`.trim()
+        : purchaseUnit?.shipping?.name?.full_name;
+      const customerEmail = payer?.email_address;
+      const totalAmount =
+        purchaseUnit?.payments?.captures?.[0]?.amount?.value ||
+        purchaseUnit?.amount?.value ||
+        '0.00';
+      const currency = purchaseUnit?.amount?.currency_code || 'CAD';
+
+      const addr = purchaseUnit?.shipping?.address;
+      const shippingAddress = addr
+        ? `${purchaseUnit?.shipping?.name?.full_name || ''}\n${addr.address_line_1 || ''} ${addr.address_line_2 || ''}\n${addr.admin_area_2 || ''}, ${addr.admin_area_1 || ''} ${addr.postal_code || ''}\n${addr.country_code || ''}`.trim()
+        : 'N/A';
+
+      const items = purchaseUnit?.items?.map(
+        (item: { name?: string; quantity?: string | number; unit_amount?: { value?: string } }) => ({
+          name: item.name || 'Product',
+          quantity: Number(item.quantity || 1),
+          price: Number(item.unit_amount?.value || 0),
+        })
+      );
+
+      await sendOrderNotification({
+        orderId: orderId || token,
+        provider: 'PayPal',
+        customerName,
+        customerEmail,
+        totalAmount,
+        currency,
+        items,
+        shippingAddress,
+      }).catch((err) => console.error('Notification error:', err));
+
       return NextResponse.redirect(
         `${origin}/2/order-confirmation?paypal_order_id=${encodeURIComponent(token)}&orderId=${encodeURIComponent(orderId)}&status=paid`
       );

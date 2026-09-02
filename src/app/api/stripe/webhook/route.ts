@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 
 import { getStripeServerClient } from '@/lib/stripe';
 import { getSupabaseAdminClient } from '@/lib/supabase';
+import { sendOrderNotification } from '@/lib/notifications';
 
 export const runtime = 'nodejs';
 
@@ -87,6 +88,26 @@ export async function POST(request: Request) {
     if (error) {
       throw new Error(`Unable to save order: ${error.message}`);
     }
+
+    const shippingDetails = getShippingDetails(session);
+    const shippingStr = shippingDetails.address
+      ? `${shippingDetails.name}\n${shippingDetails.address.line1 || ''} ${shippingDetails.address.line2 || ''}\n${shippingDetails.address.city || ''}, ${shippingDetails.address.state || ''} ${shippingDetails.address.postalCode || ''}\n${shippingDetails.address.country || ''}`.trim()
+      : shippingDetails.name || 'N/A';
+
+    await sendOrderNotification({
+      orderId: session.metadata.orderId,
+      provider: 'Stripe',
+      customerName: shippingDetails.name,
+      customerEmail: session.customer_email,
+      totalAmount: ((session.amount_total ?? 0) / 100).toFixed(2),
+      currency: session.currency || 'cad',
+      items: items.map((i) => ({
+        name: i.name,
+        quantity: i.quantity,
+        price: i.amount ? i.amount / 100 / (i.quantity || 1) : 0,
+      })),
+      shippingAddress: shippingStr,
+    }).catch((err) => console.error('Stripe notification error:', err));
 
     return NextResponse.json({ received: true }, { status: 200 });
   } catch (error) {
